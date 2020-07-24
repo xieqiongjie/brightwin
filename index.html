@@ -4,18 +4,53 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
-	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <style>
+    .demo-form-inline {
+      margin: 10px;
+    }
+    .tips {
+      color: #E6A23C;
+      font-size: 12px;
+      margin: 10px;
+    }
+  </style>
 </head>
 <body>
 	<div id="app">
+    <el-input v-model.number="total">
+      <template slot="prepend">油脂总质量：</template>
+      <template slot="append">g</template>
+    </el-input>
+    <el-form :inline="true" :model="newData" class="demo-form-inline">
+      <el-form-item label="椰子油">
+        <el-input v-model.number="newData.ye"><template slot="append">%</template></el-input>
+      </el-form-item>
+      <el-form-item label="橄榄油">
+        <el-input v-model.number="newData.gan"><template slot="append">%</template></el-input>
+      </el-form-item>
+      <el-form-item label="甜杏仁油">
+        <el-input v-model.number="newData.tian"><template slot="append">%</template></el-input>
+      </el-form-item>
+      <el-form-item label="月见草油">
+        <el-input v-model.number="newData.yue"><template slot="append">%</template></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit" :tips="tips">添加</el-button>
+      </el-form-item>
+    </el-form>
+    <p class="tips" v-if="tips" @click="tips=''">{{ tips }}<small>（点击消失）</small></p>
 		<el-table
 			:data="tableData"
 			stripe
 			style="width: 100%;">
-			<el-table-column
-				label="油脂总质量"
+      <el-table-column
+				label="成品总质量"
 				width="180">
-				<template slot-scope="scope">{{ total }}g</template>
+				<template slot-scope="scope">
+          {{ (total + (scope.row.ye * 0.19 + scope.row.gan * 0.134 + scope.row.tian * 0.136 + scope.row.yue * 0.1357) * total * 0.95 + total * 0.03).toFixed(2) }}g ~ 
+          {{ (total + (scope.row.ye * 0.19 + scope.row.gan * 0.134 + scope.row.tian * 0.136 + scope.row.yue * 0.1357) * total * 0.95 + total * 0.05).toFixed(2) }}g
+        </template>
 			</el-table-column>
 			<el-table-column
 				label="椰子油"
@@ -63,8 +98,20 @@
 					{ ye: 0.1, gan: 0.4, tian: 0.3, yue: 0.2 },
 					{ ye: 0.15, gan: 0.4, tian: 0.25, yue: 0.2 },
 					{ ye: 0.2, gan: 0.4, tian: 0.25, yue: 0.15 },
-				]
-			}
+				],
+        newData: { ye: 0, gan: 0, tian: 0, yue: 0 },
+        tips: ""
+			},
+      methods: {
+        onSubmit() {
+          const data = this.newData
+          if (data.ye + data.gan + data.tian + data.yue != 100) {
+            this.tips = "总额不足100%"
+          } else {
+            this.tableData.push(JSON.parse(JSON.stringify(data)))
+          }
+        }
+      }
 		})
 	</script>
 </body>
