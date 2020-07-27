@@ -108,7 +108,14 @@
           if (data.ye + data.gan + data.tian + data.yue != 100) {
             this.tips = "总额不足100%"
           } else {
-            this.tableData.push(JSON.parse(JSON.stringify(data)))
+            let obj = JSON.parse(JSON.stringify(data))
+            for (const key in obj) {
+              if (obj.hasOwnProperty(key)) {
+                const element = obj[key]
+                obj[key] = element / 100
+              }
+            }
+            this.tableData.push(obj)
           }
         }
       }
