@@ -22,19 +22,10 @@
       <template slot="prepend">油脂总质量：</template>
       <template slot="append">g</template>
     </el-input>
-    <el-form :inline="true" :model="newData" class="demo-form-inline">
-      <el-form-item label="椰子油">
-        <el-input v-model.number="newData.ye"><template slot="append">%</template></el-input>
-      </el-form-item>
-      <el-form-item label="橄榄油">
-        <el-input v-model.number="newData.gan"><template slot="append">%</template></el-input>
-      </el-form-item>
-      <el-form-item label="甜杏仁油">
-        <el-input v-model.number="newData.tian"><template slot="append">%</template></el-input>
-      </el-form-item>
-      <el-form-item label="月见草油">
-        <el-input v-model.number="newData.yue"><template slot="append">%</template></el-input>
-      </el-form-item>
+    <el-form :inline="true" class="demo-form-inline">
+			<el-form-item :label="item.text" v-for="item in baseData">
+        <el-input v-model.number="item.value"><template slot="append">%</template></el-input>
+			</el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit" :tips="tips">添加</el-button>
       </el-form-item>
@@ -48,35 +39,23 @@
 				label="成品总质量"
 				width="180">
 				<template slot-scope="scope">
-          {{ (total + (scope.row.ye * 0.19 + scope.row.gan * 0.134 + scope.row.tian * 0.136 + scope.row.yue * 0.1357) * total * 0.95 + total * 0.03).toFixed(2) }}g ~ 
-          {{ (total + (scope.row.ye * 0.19 + scope.row.gan * 0.134 + scope.row.tian * 0.136 + scope.row.yue * 0.1357) * total * 0.95 + total * 0.05).toFixed(2) }}g
-        </template>
+				{{ (total + NaOH(scope.row) * total * 0.95 + total * 0.03).toFixed(2) }}g ~ 
+				{{ (total + NaOH(scope.row) * total * 0.95 + total * 0.05).toFixed(2) }}g
+				</template>
 			</el-table-column>
 			<el-table-column
-				label="椰子油"
+				v-for="item in baseData"
+				:label="item.text"
 				width="180">
-				<template slot-scope="scope">{{ scope.row.ye * 100 }}% <small>/ {{ scope.row.ye * total }}g</small></template>
+				<template slot-scope="scope">{{ scope.row[item.name] * 100 }}% <small>/ {{ scope.row[item.name] * total }}g</small></template>
 			</el-table-column>
 			<el-table-column
-				label="橄榄油"
-				width="180">
-				<template slot-scope="scope">{{ scope.row.gan * 100 }}% <small>/ {{ scope.row.gan * total }}g</small></template>
+				label="NaOH(-5%)">
+				<template slot-scope="scope">{{ (NaOH(scope.row) * total * 0.95).toFixed(2) }}g</template>
 			</el-table-column>
 			<el-table-column
-				label="甜杏仁油">
-				<template slot-scope="scope">{{ scope.row.tian * 100 }}% <small>/ {{ scope.row.tian * total }}g</small></template>
-			</el-table-column>
-			<el-table-column
-				label="月见草油">
-				<template slot-scope="scope">{{ scope.row.yue * 100 }}% <small>/ {{ scope.row.yue * total }}g</small></template>
-			</el-table-column>
-			<el-table-column
-			label="NaOH(-5%)">
-				<template slot-scope="scope">{{ ((scope.row.ye * 0.19 + scope.row.gan * 0.134 + scope.row.tian * 0.136 + scope.row.yue * 0.1357) * total * 0.95).toFixed(2) }}g</template>
-			</el-table-column>
-			<el-table-column
-			label="水">
-				<template slot-scope="scope">{{ ((scope.row.ye * 0.19 + scope.row.gan * 0.134 + scope.row.tian * 0.136 + scope.row.yue * 0.1357) * total * 0.95 * 2.333).toFixed(2) }}g</template>
+				label="水">
+				<template slot-scope="scope">{{ (NaOH(scope.row) * total * 0.95 * 2.333).toFixed(2) }}g</template>
 			</el-table-column>
 			<el-table-column
 				label="添加物"
@@ -95,23 +74,36 @@
 			data: {
 				total: 100,
 				tableData: [
-					{ ye: 0.1, gan: 0.4, tian: 0.3, yue: 0.2 },
-					{ ye: 0.15, gan: 0.4, tian: 0.25, yue: 0.2 },
-					{ ye: 0.2, gan: 0.4, tian: 0.25, yue: 0.15 },
+					{ ye: 0.1, gan: 0.4, tian: 0.3, yue: 0.2, zong: 0 },
+					{ ye: 0.15, gan: 0.4, tian: 0.25, yue: 0.2, zong: 0 },
+					{ ye: 0.2, gan: 0.4, tian: 0.25, yue: 0.15, zong: 0 },
 				],
-        newData: { ye: 0, gan: 0, tian: 0, yue: 0 },
-        tips: ""
+				tips: "",
+				baseData: [
+					{text: "棕榈油", name: "zong", i: 0.141, value: 0},
+					{text: "椰子油", name: "ye", i: 0.19, value: 0},
+					{text: "橄榄油", name: "gan", i: 0.134, value: 0},
+					{text: "甜杏仁油", name: "tian", i: 0.136, value: 0},
+					{text: "月见草油", name: "yue", i: 0.1357, value: 0},
+				]
 			},
-      methods: {
-        onSubmit() {
-          const data = this.newData
-          if (data.ye + data.gan + data.tian + data.yue != 100) {
-            this.tips = "总额不足100%"
-          } else {
-            this.tableData.push(JSON.parse(JSON.stringify(data)))
-          }
-        }
-      }
+			methods: {
+				onSubmit() {
+					const v = {}
+					const data = this.baseData.reduce((a, b) => {
+						v[b.name] = b.value / 100
+						return a + b.value
+					}, 0)
+					if (data !== 100) {
+						this.tips = "总额不足100%"
+					} else {
+						this.tableData.push(JSON.parse(JSON.stringify(v)))
+					}
+				},
+				NaOH(v) {
+					return this.baseData.reduce((a, b) => a + v[b.name] * b.i, 0)
+				}
+			}
 		})
 	</script>
 </body>
