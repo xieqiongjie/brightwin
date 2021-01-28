@@ -5,22 +5,101 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>我的小菜单</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    #app {
+      display: none;
+    }
+    .grid {
+      display: flex;
+    }
     .grid-item {
-      margin-right: 10px;
-      margin-bottom: 10px;
+      flex: 1;
+      height: 60px;
+      line-height: 60px;
+      border-bottom: 4px solid transparent;
+      text-align: center;
+    }
+    .grid-item.on {
+      border-bottom: 4px solid #48D799;
+    }
+    .menus {
+      margin-top: 20px;
+    }
+    .menus li {
+      margin: 4px 10px;
+      padding-left: 10px;
+      border-left: 4px solid #48D799;
+    }
+    .menus a {
+      color: #74757A;
     }
   </style>
 </head>
 <body>
-  <div class="grid">
-    <ul class="grid-item">
-      <li><a href="html/soap.html?showMenu=1">手工皂制作配料计算小工具</a></li>
-    </ul>
-    <ul class="grid-item">
-      <li><a href="html/twitter-trans.html?showMenu=1">Twitter顶部过渡条效果</a></li>
-    </ul>
+  <div id="app">
+    <div class="grid">
+      <div
+        class="grid-item"
+        :class="{ on: tab === index }"
+        v-for="(item, index) in tabList"
+        @click="setMenu(item, index)"
+      >{{ item.title }}</div>
+    </div>
+    <div class="menus">
+      <ul>
+        <li v-for="item in menu"><a :href="item.url">{{ item.title }}</a></li>
+      </ul>
+    </div>
   </div>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
   <script>
+    var vm = new Vue({
+      el: "#app",
+      data() {
+        return {
+          menu: [],
+          tabList: [{
+            title: "文章",
+            list: [{
+              title: "vue中加入scss踩坑",
+              url: "https://juejin.cn/post/6896011524079517704"
+            },{
+              title: "前端面试总结-题目",
+              url: "https://juejin.cn/post/6896032785993138189"
+            },{
+              title: "实现过渡loading效果",
+              url: "https://juejin.cn/post/6922696911531016206"
+            }]
+          }, {
+            title: "小功能",
+            list: [{
+              title: "Twitter顶部过渡条效果",
+              url: "html/twitter-trans.html?showMenu=1"
+            }]
+          }, {
+            title: "小工具",
+            list: [{
+              title: "手工皂制作配料计算小工具",
+              url: "html/soap.html?showMenu=1"
+            }]
+          }],
+          tab: 0
+        }
+      },
+      mounted() {
+        this.menu = this.tabList[ this.tab ].list
+        document.getElementById('app').style.display = "block"
+      },
+      methods: {
+        setMenu(item, index) {
+          this.tab = index
+          this.menu = item.list
+        }
+      },
+    })
   </script>
 </body>
 </html>

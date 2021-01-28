@@ -22,9 +22,9 @@
 	  <a href="../index.html">菜单页</a> / Twitter顶部过渡条效果
 	</div>
 	<div id="app">
-		<el-input v-model.number="total">
-		<template slot="prepend">油脂总质量：</template>
-		<template slot="append">g</template>
+		<el-input v-model.number="total" style="width: 300px;">
+			<template slot="prepend">油脂总质量：</template>
+			<template slot="append">g</template>
 		</el-input>
 		<el-form :inline="true" class="demo-form-inline">
 			<el-form-item :label="item.text" v-for="item in baseData">
