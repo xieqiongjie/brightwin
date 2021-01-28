@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>日期计算器</title>
+	<link rel="stylesheet" href="../../css/index.css">
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+    }
+    #app {
+      display: none;
+    }
+    h2 {
+      margin: 10px 0;
+    }
+    input {
+      width: 80px;
+    }
+	</style>
+</head>
+<body>
+	<div class="menu">
+	  <a href="../../index.html">菜单页</a> / 日期计算器
+	</div>
+	<div id="app">
+    <h2>一、计算两个日期之间差多少天</h2>
+    <p>
+      开始日期：
+      <input type="text" v-model="data1.begin.year" @change="getSeparated">年
+      <input type="text" v-model="data1.begin.month" @change="getSeparated">月
+      <input type="text" v-model="data1.begin.day" @change="getSeparated">日
+    </p>
+    <p>
+      结束日期：
+      <input type="text" v-model="data1.end.year" @change="getSeparated">年
+      <input type="text" v-model="data1.end.month" @change="getSeparated">月
+      <input type="text" v-model="data1.end.day" @change="getSeparated">日
+    </p>
+    <p>
+      相差：{{ data1.result }}
+    </p>
+    <h2>二、推算几天后的日期</h2>
+    <p>
+      开始日期：
+      <input type="text" v-model="data2.year" @change="getDay">年
+      <input type="text" v-model="data2.month" @change="getDay">月
+      <input type="text" v-model="data2.day" @change="getDay">日
+    </p>
+    <p>
+      相隔日期：
+      <input type="text" v-model="data2.separated" @change="getDay">天
+    </p>
+    <p>
+      日期：{{ data2.result }}
+    </p>
+	</div>
+	<!-- 引入vue -->
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	<script>
+		var vm = new Vue({
+			el: '#app',
+			data() {
+        return {
+          data1: {
+            begin: {
+              year: "",
+              month: "",
+              day: ""
+            },
+            end: {
+              year: "",
+              month: "",
+              day: ""
+            },
+            result: ""
+          },
+          data2: {
+            year: "",
+            month: "",
+            day: "",
+            separated: "",
+            result: ""
+          }
+        }
+      },
+      mounted() {
+        const date = new Date()
+        this.data1.begin.year = this.data2.year = date.getFullYear()
+        this.data1.begin.month = this.data2.month = date.getMonth() + 1
+        this.data1.begin.day = this.data2.day = date.getDate()
+        document.getElementById('app').style.display = "block"
+      },
+			methods: {
+        getSeparated() {
+          const { begin, end } = this.data1
+          if (begin.year && begin.month && begin.day && end.year && end.month && end.day) {
+            this.data1.result = Math.abs( ( new Date(
+              this.getTime(
+                begin.year,
+                begin.month,
+                begin.day
+              )
+            ) - new Date(
+              this.getTime(
+                end.year,
+                end.month,
+                end.day
+              )
+            ) ) / 86400000 )
+          }
+        },
+        getDay() {
+          const data = this.data2
+          if (data.year && data.month && data.day && data.separated) {
+            const date = new Date( new Date(
+              this.getTime(
+                data.year,
+                data.month,
+                data.day
+              )
+            ).getTime() + data.separated * 86400000 )
+            this.data2.result = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
+          }
+        },
+        getTime(y, m, d) {
+          const zero = v => v < 10 ? ("0" + v) : v
+          return `${y}-${zero(m)}-${zero(d)}`
+        }
+      }
+		})
+		if (location.search.indexOf('showMenu') > -1) {
+			document.getElementsByClassName('menu')[0].style.display = 'block'
+		}
+	</script>
+</body>
+</html>

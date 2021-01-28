@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="./css/index.css">
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+    }
+    #app {
+      display: none;
+    }
+	</style>
+</head>
+<body>
+	<div class="menu">
+	  <a href="../../index.html">菜单页</a> / xxx
+	</div>
+	<div id="app">
+	</div>
+	<!-- 引入vue -->
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	<script>
+		var vm = new Vue({
+			el: '#app',
+			data() {
+        return {}
+      },
+      mounted() {
+        document.getElementById('app').style.display = "block"
+      },
+			methods: {}
+		})
+		if (location.search.indexOf('showMenu') > -1) {
+			document.getElementsByClassName('menu')[0].style.display = 'block'
+		}
+	</script>
+</body>
+</html>
