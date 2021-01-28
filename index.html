@@ -1,110 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的小菜单</title>
   <style>
-    .demo-form-inline {
-      margin: 10px;
-    }
-    .tips {
-      color: #E6A23C;
-      font-size: 12px;
-      margin: 10px;
+    .grid-item {
+      margin-right: 10px;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
-	<div id="app">
-    <el-input v-model.number="total">
-      <template slot="prepend">油脂总质量：</template>
-      <template slot="append">g</template>
-    </el-input>
-    <el-form :inline="true" class="demo-form-inline">
-			<el-form-item :label="item.text" v-for="item in baseData">
-        <el-input v-model.number="item.value"><template slot="append">%</template></el-input>
-			</el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="onSubmit" :tips="tips">添加</el-button>
-      </el-form-item>
-    </el-form>
-    <p class="tips" v-if="tips" @click="tips=''">{{ tips }}<small>（点击消失）</small></p>
-		<el-table
-			:data="tableData"
-			stripe
-			style="width: 100%;">
-      <el-table-column
-				label="成品总质量"
-				width="180">
-				<template slot-scope="scope">
-				{{ (total + NaOH(scope.row) * total * 0.95 + total * 0.03).toFixed(2) }}g ~ 
-				{{ (total + NaOH(scope.row) * total * 0.95 + total * 0.05).toFixed(2) }}g
-				</template>
-			</el-table-column>
-			<el-table-column
-				v-for="item in baseData"
-				:label="item.text"
-				width="180">
-				<template slot-scope="scope">{{ scope.row[item.name] * 100 }}% <small>/ {{ scope.row[item.name] * total }}g</small></template>
-			</el-table-column>
-			<el-table-column
-				label="NaOH(-5%)">
-				<template slot-scope="scope">{{ (NaOH(scope.row) * total * 0.95).toFixed(2) }}g</template>
-			</el-table-column>
-			<el-table-column
-				label="水">
-				<template slot-scope="scope">{{ (NaOH(scope.row) * total * 0.95 * 2.333).toFixed(2) }}g</template>
-			</el-table-column>
-			<el-table-column
-				label="添加物"
-				width="180">
-				<template slot-scope="scope">{{ total * 0.03 }}g ~ {{ total * 0.05 }}g</template>
-			</el-table-column>
-		</el-table>
-	</div>
-	<!-- 引入vue -->
-	<script src="https://unpkg.com/vue/dist/vue.js"></script>
-	<!-- 引入elementUI -->
-	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
-	<script>
-		var vm = new Vue({
-			el: '#app',
-			data: {
-				total: 100,
-				tableData: [
-					{ ye: 0.1, gan: 0.4, tian: 0.3, yue: 0.2, zong: 0 },
-					{ ye: 0.15, gan: 0.4, tian: 0.25, yue: 0.2, zong: 0 },
-					{ ye: 0.2, gan: 0.4, tian: 0.25, yue: 0.15, zong: 0 },
-				],
-				tips: "",
-				baseData: [
-					{text: "棕榈油", name: "zong", i: 0.141, value: 0},
-					{text: "椰子油", name: "ye", i: 0.19, value: 0},
-					{text: "橄榄油", name: "gan", i: 0.134, value: 0},
-					{text: "甜杏仁油", name: "tian", i: 0.136, value: 0},
-					{text: "月见草油", name: "yue", i: 0.1357, value: 0},
-				]
-			},
-			methods: {
-				onSubmit() {
-					const v = {}
-					const data = this.baseData.reduce((a, b) => {
-						v[b.name] = b.value / 100
-						return a + b.value
-					}, 0)
-					if (data !== 100) {
-						this.tips = "总额不足100%"
-					} else {
-						this.tableData.push(JSON.parse(JSON.stringify(v)))
-					}
-				},
-				NaOH(v) {
-					return this.baseData.reduce((a, b) => a + v[b.name] * b.i, 0)
-				}
-			}
-		})
-	</script>
+  <div class="grid">
+    <ul class="grid-item">
+      <li><a href="html/soap.html?showMenu=1">手工皂制作配料计算小工具</a></li>
+    </ul>
+    <ul class="grid-item">
+      <li><a href="html/twitter-trans.html?showMenu=1">Twitter顶部过渡条效果</a></li>
+    </ul>
+  </div>
+  <script>
+  </script>
 </body>
 </html>

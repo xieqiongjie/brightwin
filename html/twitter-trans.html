@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Masonry</title>
+	<link rel="stylesheet" href="../css/index.css">
+  <style>
+    .grid {
+      display: flex;
+      width: 600px;
+      height: 100px;
+      background: #FFFFFF;
+      overflow: hidden;
+      position: relative;
+    }
+    .grid::before {
+      content: "";
+      display: block;
+      width: 1480px;
+      height: 100px;
+      background: linear-gradient(to right, rgba(0, 0, 0, .05), rgba(0, 0, 0, .05) 40%, rgba(0, 0, 0, .1) 50%, rgba(0, 0, 0, .05) 60%, rgba(0, 0, 0, .05));
+      position: absolute;
+      left: -860px;
+      z-index: 1;
+    }
+    .move::before {
+      left: 0;
+      transition: 1.6s left linear;
+    }
+    canvas {
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <div class="menu">
+    <a href="../index.html">菜单页</a> / Twitter顶部过渡条效果
+  </div>
+  <div id="grid" class="grid">
+    <canvas></canvas>
+    <canvas></canvas>
+    <canvas></canvas>
+    <canvas></canvas>
+    <canvas></canvas>
+    <canvas></canvas>
+  </div>
+  <script>
+    if (location.search.indexOf('showMenu') > -1) {
+			document.getElementsByClassName('menu')[0].style.display = 'block'
+		}
+    class CanvasBox {
+      constructor(data = {}) {
+        this.w = data.w || 80
+        this.x = data.x || 10
+        this.y = data.y || 10
+      }
+
+      setCanvas(canvas) {
+        canvas.width = this.w + this.x * 2
+        canvas.height = this.w + this.y * 2
+        console.log(canvas.width, canvas.height)
+        var ctx = canvas.getContext("2d")
+        ctx.fillStyle="#ffffff";
+        ctx.fillRect(0, 0, canvas.width, this.y)
+        ctx.fillRect(0, this.y + this.w, canvas.width, this.y)
+        ctx.fillRect(0, this.y, this.x, this.w)
+        ctx.fillRect(this.x + this.w, this.y, this.x, this.w)
+        ctx.beginPath()
+        ctx.moveTo(this.x, canvas.height / 2)
+        ctx.lineTo(this.x, this.y + this.w)
+        ctx.lineTo(this.x + this.w, this.y + this.w)
+        ctx.lineTo(this.x + this.w, this.y)
+        ctx.lineTo(this.x, this.y)
+        ctx.lineTo(this.x, canvas.height / 2)
+        ctx.arc(canvas.width / 2, canvas.height / 2, this.w / 2, 0, Math.PI * 2)
+        ctx.fill()
+      }
+    }
+    
+    var canvasList = document.querySelectorAll("canvas")
+    for (let i = 0; i < canvasList.length; i++) {
+      const element = canvasList[i]
+      new CanvasBox().setCanvas(element)
+    }
+
+    setInterval(function() {
+      document.getElementById('grid').className = "grid"
+      setTimeout(function() {
+        document.getElementById('grid').className = "grid move"
+      }, 0)
+    }, 2000)
+  </script>
+</body>
+</html>
