@@ -4,54 +4,148 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>我的小菜单</title>
+	<link rel="stylesheet" href="./css/index.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-    }
     #app {
       display: none;
+      min-width: 1200px;
+      height: 100vh;
+      overflow: scroll;
+      background-color: #0E1214;
+    }
+    .box {
+      position: relative;
+      color: #fff;
+    }
+    .topbar {
+      height: 65vh;
+      background: url(./img/bg.jpg) no-repeat center;
+      background-size: cover;
+    }
+    .inner {
+      position: absolute;
+      top: 300px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1000px;
+      min-height: 600px;
+      border: 10px solid rgba(0, 0, 0, .2);
+      border-radius: 20px;
+      background: url(./img/bg.jpg) no-repeat top center;
+      background-size: cover;
+      background-clip: content-box;
     }
     .grid {
+      width: 300px;
+      margin: 0 auto;
       display: flex;
     }
     .grid-item {
       flex: 1;
-      height: 60px;
-      line-height: 60px;
-      border-bottom: 4px solid transparent;
+      margin-top: 20px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid transparent;
       text-align: center;
+      cursor: pointer;
+      position: relative;
     }
-    .grid-item.on {
-      border-bottom: 4px solid #48D799;
+    .grid-item.on::after {
+      content: "";
+      display: block;
+      width: 32px;
+      height: 2px;
+      background: #fff;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
     }
     .menus {
-      margin-top: 20px;
+      margin: 20px;
+      font-size: 13px;
     }
     .menus li {
-      margin: 4px 10px;
-      padding-left: 10px;
-      border-left: 4px solid #48D799;
+      height: 24px;
+      line-height: 24px;
+      margin: 10px 10px;
+      padding-left: 30px;
+      background: url(./img/Arrow-Right2.png) no-repeat;
+      background-size: contain;
     }
     .menus a {
-      color: #74757A;
+      color: #fff;
+    }
+    .topbar {
+      padding: 40px;
+    }
+    .author {
+      display: flex;
+      flex-direction: column;
+    }
+    .name {
+      text-align: right;
+    }
+    .name i {
+      background: url(./img/Profile.png) no-repeat;
+      background-size: cover;
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      vertical-align: bottom;
+    }
+    .inter {
+      font-size: 40px;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 100px;
+    }
+    .inter p {
+      font-size: 20px;
+    }
+    @media screen and (max-width: 700px) and (min-width: 300px) {
+      #app {
+        min-width: auto;
+      }
+      .inner {
+        width: 80vw;
+        min-height: 40vw;
+        top: 260px;
+      }
+      .inter {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 <body>
   <div id="app">
-    <div class="grid">
-      <div
-        class="grid-item"
-        :class="{ on: tab === index }"
-        v-for="(item, index) in tabList"
-        @click="setMenu(item, index)"
-      >{{ item.title }}</div>
-    </div>
-    <div class="menus">
-      <ul>
-        <li v-for="item in menu"><a :href="item.url">{{ item.title }}</a></li>
-      </ul>
+    <div class="box">
+      <div class="topbar">
+        <div class="author">
+          <div class="name">
+            <i></i>
+            karroy
+          </div>
+        </div>
+        <div class="inter">
+          xieqiongjie.github.io/brightwin
+        </div>
+      </div>
+      <div class="inner">
+        <div class="grid">
+          <div
+            class="grid-item"
+            :class="{ on: tab === index }"
+            v-for="(item, index) in tabList"
+            @click="setMenu(item, index)"
+          >{{ item.title }}</div>
+        </div>
+        <div class="menus">
+          <ul>
+            <li v-for="item in menu"><a :href="item.url">{{ item.title }}</a></li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 	<script src="https://unpkg.com/vue/dist/vue.js"></script>
@@ -72,6 +166,9 @@
             },{
               title: "实现过渡loading效果",
               url: "https://juejin.cn/post/6922696911531016206"
+            },{
+              title: "逆水寒庄园6升8级资源消耗",
+              url: "html/article/zhuangyuan.html?showMenu=1"
             }]
           }, {
             title: "小功能",
@@ -100,6 +197,9 @@
         setMenu(item, index) {
           this.tab = index
           this.menu = item.list
+        },
+        goto() {
+          location.href = "https://xieqiongjie.github.io/brightwin"
         }
       },
     })

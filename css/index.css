@@ -1,9 +1,22 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  font-weight: "PingFang SC","Lantinghei SC","Microsoft YaHei","HanHei SC","Helvetica Neue","Open Sans",Arial,"Hiragino Sans GB","微软雅黑",STHeiti,"WenQuanYi Micro Hei",SimSun,sans-serif;
+  -webkit-tap-highlight-color:rgba(255,0,0,0);
+}
+a{
+  text-decoration: none;
+}
+ul {
+  list-style: none;
+}
 .menu {
-    color: #8b8b8b;
-    font-size: 12px;
-    display: none;
-    margin-bottom: 20px;
+  color: #8b8b8b;
+  font-size: 12px;
+  display: none;
+  margin-bottom: 20px;
 }
 .menu a {
-    color: #414141;
+  color: #414141;
 }
