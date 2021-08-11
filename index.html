@@ -4,73 +4,96 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>我的小菜单</title>
+	<link rel="stylesheet" href="./css/swiper-bundle.min.css">
 	<link rel="stylesheet" href="./css/index.css">
   <style>
     #app {
       display: none;
-      min-width: 1200px;
-      height: 100vh;
-      overflow: scroll;
+      min-height: 100vh;
       background-color: #0E1214;
     }
     .box {
       position: relative;
       color: #fff;
-    }
-    .topbar {
-      height: 65vh;
       background: url(./img/bg.jpg) no-repeat center;
       background-size: cover;
     }
+    .swiper-container {
+      width: 90%;
+      height: 400px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .swiper-wrapper {
+      padding-bottom: 20px;
+    }
+    .swiper-pagination {
+      margin-right: 4px;
+    }
+    .my-bullet {
+      width: 6px;
+      height: 6px;
+      margin-bottom: 8px;
+      display: block;
+      background: #fff;
+      border-radius: 6px;
+      transition: height 200ms ease-in;
+    }
+    .swiper-pagination-bullet-active {
+      height: 20px;
+    }
     .inner {
-      position: absolute;
-      top: 300px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 1000px;
-      min-height: 600px;
       border: 10px solid rgba(0, 0, 0, .2);
       border-radius: 20px;
+      box-sizing: border-box;
       background: url(./img/bg.jpg) no-repeat top center;
       background-size: cover;
       background-clip: content-box;
+      overflow: hidden;
     }
     .grid {
-      width: 300px;
-      margin: 0 auto;
       display: flex;
+      margin-left: 15px;
+      overflow-x: scroll;
+    }
+    .grid::-webkit-scrollbar {
+      display: none;
     }
     .grid-item {
-      flex: 1;
-      margin-top: 20px;
+      margin: 20px 20px 0;
       padding-bottom: 6px;
       border-bottom: 2px solid transparent;
       text-align: center;
       cursor: pointer;
       position: relative;
+      flex-shrink: 0;
     }
-    .grid-item.on::after {
+    .grid-item::after {
       content: "";
       display: block;
-      width: 32px;
+      width: 0;
       height: 2px;
+      transition: width 120ms ease-out;
+      border-radius: 2px;
       background: #fff;
       position: absolute;
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
     }
+    .grid-item.on::after {
+      width: 100%;
+    }
     .menus {
       margin: 20px;
       font-size: 13px;
     }
     .menus li {
-      height: 24px;
-      line-height: 24px;
+      line-height: 20px;
       margin: 10px 10px;
-      padding-left: 30px;
+      padding-left: 24px;
       background: url(./img/Arrow-Right2.png) no-repeat;
-      background-size: contain;
+      background-size: 20px 20px;
     }
     .menus a {
       color: #fff;
@@ -104,15 +127,16 @@
     }
     @media screen and (max-width: 700px) and (min-width: 300px) {
       #app {
-        min-width: auto;
+        /* min-width: auto; */
       }
       .inner {
-        width: 80vw;
+        /* width: 80vw;
         min-height: 40vw;
-        top: 260px;
+        top: 260px; */
       }
       .inter {
         font-size: 16px;
+        margin-top: 40px;
       }
     }
   </style>
@@ -122,84 +146,133 @@
     <div class="box">
       <div class="topbar">
         <div class="author">
-          <div class="name">
+          <div class="name m_cursor_pointer" @click="goto">
             <i></i>
             karroy
           </div>
         </div>
-        <div class="inter">
+        <div class="inter m_cursor_pointer" @click="goto">
           xieqiongjie.github.io/brightwin
         </div>
       </div>
-      <div class="inner">
-        <div class="grid">
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
           <div
-            class="grid-item"
-            :class="{ on: tab === index }"
-            v-for="(item, index) in tabList"
-            @click="setMenu(item, index)"
-          >{{ item.title }}</div>
+            class="swiper-slide inner"
+            v-for="it in data"
+            >
+            <div class="grid">
+              <div
+                class="grid-item"
+                :class="{ on: it.tab === index }"
+                v-for="(item, index) in it.tabList"
+                @click="setMenu(it, item, index)"
+              >{{ item.title }}</div>
+            </div>
+            <div class="menus">
+              <ul>
+                <li v-for="m in it.tabList[it.tab].list">
+                  <a :href="m.url" :target="m.target" v-if="m.target">{{ m.title }}</a>
+                  <a :href="m.url" v-else>{{ m.title }}</a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="menus">
-          <ul>
-            <li v-for="item in menu"><a :href="item.url">{{ item.title }}</a></li>
-          </ul>
-        </div>
+        <div class="swiper-pagination"></div>
       </div>
     </div>
   </div>
 	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="./js/swiper-bundle.min.js"></script>
   <script>
     var vm = new Vue({
       el: "#app",
       data() {
         return {
-          menu: [],
-          tabList: [{
-            title: "文章",
-            list: [{
-              title: "vue中加入scss踩坑",
-              url: "https://juejin.cn/post/6896011524079517704"
-            },{
-              title: "前端面试总结-题目",
-              url: "https://juejin.cn/post/6896032785993138189"
-            },{
-              title: "实现过渡loading效果",
-              url: "https://juejin.cn/post/6922696911531016206"
-            },{
-              title: "逆水寒庄园6升8级资源消耗",
-              url: "html/article/zhuangyuan.html?showMenu=1"
-            }]
-          }, {
-            title: "小功能",
-            list: [{
-              title: "Twitter顶部过渡条效果",
-              url: "html/feature/twitter-trans.html?showMenu=1"
-            }]
-          }, {
-            title: "小工具",
-            list: [{
-              title: "手工皂制作配料计算小工具",
-              url: "html/tool/soap.html?showMenu=1"
-            },{
-              title: "日期计算器",
-              url: "html/tool/dateCalc.html?showMenu=1"
-            }]
-          }],
-          tab: 0
+          data: [
+            {
+              tab: 0,
+              menuTitle: "",
+              tabList: [{
+                title: "游戏",
+                list: [{
+                  title: "逆水寒庄园6升8级资源消耗",
+                  url: "html/article/zhuangyuan.html?showMenu=1"
+                }]
+              }, {
+                title: "小工具",
+                list: [{
+                  title: "手工皂制作配料计算小工具",
+                  url: "html/tool/soap.html?showMenu=1"
+                }, {
+                  title: "日期计算器",
+                  url: "html/tool/dateCalc.html?showMenu=1"
+                }]
+              }]
+            },
+            {
+              tab: 0,
+              menuTitle: "",
+              tabList: [{
+                title: "写文章",
+                list: [{
+                  title: "vue中加入scss踩坑",
+                  target: "_blank",
+                  url: "https://juejin.cn/post/6896011524079517704"
+                }, {
+                  title: "前端面试总结-题目",
+                  target: "_blank",
+                  url: "https://juejin.cn/post/6896032785993138189"
+                }]
+              }, {
+                title: "实践",
+                list: [{
+                  title: "Twitter顶部过渡条效果",
+                  url: "html/feature/twitter-trans.html?showMenu=1"
+                }, {
+                  title: "实现过渡loading效果",
+                  target: "_blank",
+                  url: "https://juejin.cn/post/6922696911531016206"
+                }]
+              }, {
+                title: "收藏文章",
+                list: [{
+                  title: "一行CSS实现全站中文简繁转换",
+                  target: "_blank",
+                  url: "https://www.zhangxinxu.com/wordpress/2021/01/css-simplified-traditional-chinese/"
+                }, {
+                  title: "使用JS判断用户操作系统是否安装某字体",
+                  target: "_blank",
+                  url: "https://www.zhangxinxu.com/wordpress/2018/02/js-detect-suppot-font-family/"
+                }]
+              }]
+            }
+          ]
         }
       },
       mounted() {
-        this.menu = this.tabList[ this.tab ].list
         document.getElementById('app').style.display = "block"
+        this.$nextTick(function() {
+          this.initSwiper()
+        })
       },
       methods: {
-        setMenu(item, index) {
-          this.tab = index
-          this.menu = item.list
+        setMenu(it, item, index) {
+          it.tab = index
         },
         goto() {
           location.href = "https://xieqiongjie.github.io/brightwin"
+        },
+        initSwiper() {
+          var swiper = new Swiper('.swiper-container', {
+            direction : 'vertical',
+            pagination: {
+              el: '.swiper-pagination',
+              clickable: true,
+              bulletClass : 'my-bullet'
+            },
+          });
         }
       },
     })
