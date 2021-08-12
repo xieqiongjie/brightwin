@@ -17,6 +17,7 @@
       color: #fff;
       background: url(./img/bg.jpg) no-repeat center;
       background-size: cover;
+      padding-bottom: 40px;
     }
     .swiper-container {
       width: 90%;
@@ -146,12 +147,16 @@
     <div class="box">
       <div class="topbar">
         <div class="author">
-          <div class="name m_cursor_pointer" @click="goto">
+          <div class="name m_cursor_pointer" @click="copy">
             <i></i>
             karroy
           </div>
         </div>
-        <div class="inter m_cursor_pointer" @click="goto">
+        <div
+          id="address"
+          class="inter m_cursor_pointer"
+          data-clipboard-text="https://xieqiongjie.github.io/brightwin/index.html"
+          @click="copy">
           xieqiongjie.github.io/brightwin
         </div>
       </div>
@@ -261,8 +266,12 @@
         setMenu(it, item, index) {
           it.tab = index
         },
-        goto() {
-          location.href = "https://xieqiongjie.github.io/brightwin"
+        async copy() {
+          if (navigator.clipboard) {
+            const clipBoard = navigator.clipboard
+            clipBoard.writeText("https://xieqiongjie.github.io/brightwin/index.html")
+            console.log("复制成功")
+          }
         },
         initSwiper() {
           var swiper = new Swiper('.swiper-container', {
@@ -272,7 +281,7 @@
               clickable: true,
               bulletClass : 'my-bullet'
             },
-          });
+          })
         }
       },
     })
